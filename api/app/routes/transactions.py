@@ -1,26 +1,31 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 import uuid
 
+# In-memory storage for transactions
+transactions: List[dict] = []
+
 # Pydantic models
-class TransactionRequest(BaseModel):
+class PostTransactionRequest(BaseModel):
     amount: float
     currency: str
 
-class TransactionResponse(BaseModel):
+class PostTransactionResponse(BaseModel):
     transaction_id: str
 
-# In-memory storage for transactions
-transactions: List[dict] = []
+class GetTransactionResponse(BaseModel):
+    transaction_id: str
+    amount: float
+    currency: str
 
 router = APIRouter(
     prefix="/transactions",
     tags=["transactions"]
 )
 
-@router.post("", response_model=TransactionResponse)
-def create_transaction(transaction: TransactionRequest): 
+@router.post("", response_model=PostTransactionResponse)
+def create_transaction(transaction: PostTransactionRequest): 
     transaction_id = str(uuid.uuid4())
 
     transaction_data = {
@@ -31,4 +36,13 @@ def create_transaction(transaction: TransactionRequest):
 
     transactions.append(transaction_data)
 
-    return TransactionResponse(transaction_id=transaction_id)
+    return PostTransactionResponse(transaction_id=transaction_id)
+
+@router.get("/{trans_id}", response_model=GetTransactionResponse)
+def get_transaction(trans_id: str):
+    for trans in transactions:
+        if trans["transaction_id"] == trans_id:
+            return GetTransactionResponse(**trans)
+
+    # If not found, raise 404
+    raise HTTPException(status_code=404, detail="Transaction not found")
