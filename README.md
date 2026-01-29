@@ -1,1 +1,1 @@
-# Fintech Payment API Platform
+# FinTech Payment API Platform
