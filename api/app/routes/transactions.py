@@ -44,5 +44,4 @@ def get_transaction(trans_id: str):
         if trans["transaction_id"] == trans_id:
             return GetTransactionResponse(**trans)
 
-    # If not found, raise 404
     raise HTTPException(status_code=404, detail="Transaction not found")
