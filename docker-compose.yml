@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -13,9 +11,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fintech_user -d fintech_dev"]
+      test: ["CMD-SHELL", "pg_isready -U api_user -d fintech_api"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - fintech-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fintech-network:
+    driver: bridge
