@@ -3,8 +3,8 @@ services:
     image: postgres:16-alpine
     container_name: api-postgres-dev
     environment:
-      POSTGRES_USER: api_user 
-      POSTGRES_PASSWORD: api_password 
+      POSTGRES_USER: api_user
+      POSTGRES_PASSWORD: api_password
       POSTGRES_DB: fintech_api
     ports:
       - "5432:5432"
@@ -17,6 +17,29 @@ services:
       retries: 5
     networks:
       - fintech-network
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: fintech-api-dev
+    environment:
+      PROJECT_NAME: "FinTech Payment API"
+      ENVIRONMENT: development
+      POSTGRES_SERVER: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: api_user
+      POSTGRES_PASSWORD: api_password
+      POSTGRES_DB: fintech_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - fintech-network
+    volumes:
+      - ./api/app:/app/app
 
 volumes:
   postgres_data:

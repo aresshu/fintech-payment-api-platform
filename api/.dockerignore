@@ -1,0 +1,31 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python 
+__pycache__/
+*.py[cod]
+
+# Local Secrets
+.env
+.env.*
+!.env.production
+
+# Git and IDE
+.git/
+.vscode/
+.DS_Store
+
+# IaC 
+terraform/
+*.tfstate*
+.terraform/
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Project Documentation
+README.md
+docs/
